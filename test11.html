@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script src="js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<hr id="progress" style="height: 3px;width: 50%;background-color: blue;float: left;">
+<br>
+<hr id="hr2" style="border-top: 1px solid #ccc;">
+</body>
+</html>
+<script type="text/javascript">
+var time1 = 5000;
+var ajaxBar = {
+	dom: null,
+	dom2: null,
+	goodStatus: true,
+	succeed: true,
+	init: function(){
+		this.dom = $('#progress');
+		this.dom2 = $('#hr2');
+	},
+	waitting: function(){
+//		this.dom2.css('borderTopColor','#ccc');
+		if(this.goodStatus == false){
+			this.goodStatus = true;
+			this.dom.css('background-color','red');
+		}else{
+			this.dom.css('background-color','blue');
+		}
+		this.stopAnimate();
+		this.dom.width(0);
+		if(!this.succeed){
+			setTimeout(this.turnRed(),time1-1000);
+			setTimeout(this.turnBlue(),time1);
+		}
+		this.dom.animate({width:'60%'}, time1-1000);
+		this.succeed = false;
+	},
+	start: function(){
+		this.stopAnimate();
+		this.dom.width('60%');
+		this.dom.animate({width:'70%'}, 100);
+	},
+	send: function(){
+//		this.stopAnimate();
+//		this.dom.width('70%');
+		this.dom.animate({width:'80%'}, 100);
+	},
+	success: function(){
+//		this.dom.width('90%');
+		this.dom.animate({width:'90%'}, 100);
+		this.succeed = true;
+	},
+	complete: function(){
+//		this.dom.width('99%');
+		this.dom.animate({width:'95%'}, 100);
+	},
+	stop: function(){
+//		this.dom.width('100%');
+		this.dom.animate({width:'100%'}, 100);
+	},
+	stopAnimate: function(){
+		this.dom.stop(true,true);
+//		this.dom.finish();
+	},
+	turnRed: function(){
+		this.dom.css('background-color','red');
+	},
+	turnBlue: function(){
+		this.dom.css('background-color','blue');
+	},
+	error: function(){
+//		this.dom2.css('borderTopColor','red');
+//		this.dom.animate({width:'101%'}, 100);
+//		this.dom.css('backgroundColor','red');
+//		this.dom.animate({'backgroundColor':'red'}, 100);
+//		this.goodStatus = false;
+	},
+};
+var url = "http://jsonplaceholder.typicode.com/todos";
+var doAjax = function(){
+	$.getJSON(url).then(function(a){
+		console.log(a);
+	});
+	ajaxBar.waitting();
+	setTimeout(doAjax,time1);
+};
+var start = function(){
+	console.log("start");
+	ajaxBar.start();
+};
+var stop = function(){
+	console.log("stop");
+	ajaxBar.stop();
+};
+var send = function(){
+	console.log("send");
+	ajaxBar.send();
+};
+var success = function(){
+	console.log("success");
+	ajaxBar.success();
+};
+var complete = function(){
+	console.log("complete");
+	ajaxBar.complete();
+};
+var error = function(){
+	console.log("error");
+	ajaxBar.error();
+};
+$(document).ajaxStart(start).ajaxStop(stop).ajaxSend(send).ajaxSuccess(success).ajaxComplete(complete).ajaxError(error);
+$.ready = function(){
+	ajaxBar.init();
+	doAjax();
+};
+</script>
