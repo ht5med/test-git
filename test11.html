@@ -27,7 +27,7 @@ var ajaxBar = {
 		this.stopAnimate();
 		this.dom.width(0);
 		this.succeed = false;
-		this.dom.animate({width:'60%'}, time1-1000, function(){
+		this.dom.animate({width:'60%'}, time1-1000).promise().done(function(){
 //			console.log("done!!");
 			if(!ajaxBar.succeed){
 				ajaxBar.turnRed();
